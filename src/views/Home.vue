@@ -21,11 +21,17 @@
         </div>
         <div class="line"></div>
         <div class="books">
-          <div class="book" v-for="item in list" :key="item.id">
-            <img :src="item.img" alt="" />
-            <p>{{item.type}}：{{item.name}}</p>
+          <div class="book" v-for="(item, index) in list" :key="index">
+            <img
+              :src="'http://localhost:8080/biyesheji/audio/read/' + item.img"
+              alt=""
+            />
+            <p>{{ item.type }}：{{ item.name }}</p>
           </div>
+          <div class="book"></div>
+          <div class="book"></div>
         </div>
+
         <div style="height: 20px"></div>
       </div>
       <div class="slider">
@@ -122,29 +128,31 @@
 
 <script>
 // @ is an alias to /src
-import axios from 'axios'
+import axios from "axios";
 export default {
   name: "home",
-  data(){
+  data() {
     return {
-      list:[]
-    }
+      list: [],
+    };
   },
-  methods:{
-    getList(){
-      const url = 'http://localhost:8080/biyesheji/audio/list'
-      axios.get(url).then(res=>{
+  methods: {
+    getList() {
+      const url = "http://localhost:8080/biyesheji/audio/list";
+      axios.get(url).then((res) => {
+        for (let i = 0; i < res.data.length; i++) {
+          if (i % 7 == 0) {
+            this.list.push(res.data[i]);
+          }
+        }
         console.log(res.data);
-        this.list = res.data
-      })
-    }
+      });
+    },
   },
-  mounted(){
-    this.getList()
+  mounted() {
+    this.getList();
   },
-  components: {
-
-  },
+  components: {},
 };
 </script>
  <style scoped>

@@ -35,6 +35,11 @@ export default new Router({
       path: '/upload',
       name: 'upload',
       component: () => import('./views/Upload.vue')
+    },
+    {
+      path: '/mywork',
+      name: 'mywork',
+      component: () => import('./views/MyWorks.vue')
     }
   ]
 })

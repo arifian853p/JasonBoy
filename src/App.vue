@@ -26,7 +26,7 @@
     </div>
     <router-view
       @logoutUser="logoutUser"
-      @login="login"
+      @lujing="lujing"
       :typen="typen"
     ></router-view>
     <audio
@@ -45,7 +45,7 @@
 export default {
   data() {
     return {
-      audioUrl: require("../public/audio/刘至佳_韩瞳-时光背面的我.mp3"),
+      audioUrl: '',
       typen: 1,
       isLogin: 0,
     };
@@ -58,8 +58,10 @@ export default {
       console.log("logout App.vue", user);
       this.isLogin = user;
     },
-    login(isLogin) {
-      console.log(isLogin);
+    lujing(lj){
+      console.log(lj);
+      this.$refs.MusicPlay.src = 'http://localhost:8080/biyesheji/audio/read/'+lj
+      
     },
     toDL() {
       this.$router.push("/personal");
@@ -71,11 +73,11 @@ export default {
     },
   },
   mounted() {
-    const userInfo = localStorage.getItem('userInfo')
+    const userInfo = localStorage.getItem("userInfo");
     if (userInfo) {
-      this.isLogin = 1
-    }else {
-      this.isLogin = 0
+      this.isLogin = 1;
+    } else {
+      this.isLogin = 0;
     }
   },
 };

@@ -1,5 +1,6 @@
 <template>
   <div class="upload-container">
+    <el-page-header @back="goBack" content="我的作品" style="padding-top:20px"> </el-page-header>
     <div class="upload-form">
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="作品名称">
@@ -73,6 +74,9 @@ export default {
     onSubmit() {
       console.log("submit!");
     },
+    goBack(){
+      this.$router.back()
+    }
   },
 };
 </script>
@@ -82,8 +86,8 @@ export default {
   width: 1180px;
   margin: 0 auto;
   background-color: #fff;
-  padding: 100px 0;
   .upload-form {
+    padding: 80px 0;
     width: 600px;
     margin:auto;
   }

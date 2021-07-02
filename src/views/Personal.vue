@@ -13,7 +13,7 @@
           <p>上传作品</p>
           <p>让别人听见你的声音</p>
         </div>
-        <div class="part">
+        <div class="part" @click="toMyWork">
           <img src="../../public/mine.png" alt="" />
           <p>我的作品</p>
           <p>让别人听见你的声音</p>
@@ -152,6 +152,9 @@ export default {
     },
     toUpload(){
       this.$router.push('/upload')
+    },
+    toMyWork(){
+      this.$router.push('/mywork')
     }
   },
   mounted() {

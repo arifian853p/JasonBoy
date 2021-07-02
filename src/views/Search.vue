@@ -2,21 +2,21 @@
   <div>
     <div class="search-container">
       <div class="search">
-        <input type="text" />
+        <input v-model="inp" type="text" />
         <div class="img">
-          <img src="../../public/Search.png" alt="" />
+          <img @click="search" src="../../public/Search.png" alt="" />
         </div>
       </div>
       <div style="display: flex">
         <div class="results">
           <div class="result" v-for="(item,index) in resultList" :key="index">
-            <img :src="item.imgUrl" alt="" />
+            <img :src="'http://localhost:8080/biyesheji/audio/read/'+item.img" alt="" />
             <div class="info">
               <p>{{item.name}}</p>
-              <p><span>合集：</span>{{item.collection}}</p>
+              <p><span>分类：</span>{{item.type}}</p>
             </div>
-            <p class="author"><span>by：</span>{{item.autor}}</p>
-            <p class="time"><span>时长：</span>{{item.time}}</p>
+            <p class="author"><span>by：</span>江南</p>
+            <p class="time"><span>时长：</span>20:12</p>
             <img class="play" @click="toPlay" src="../../public/play.png" alt="" />
           </div>
         </div>
@@ -112,26 +112,44 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data(){
     return {
-      resultList:[
-        {imgUrl:'http://t13.baidu.com/it/u=209943214,4118715336&fm=224&app=112&f=JPEG?w=500&h=500',name:'乐器',collection:'童话故事',autor:'江南',time:'20:14'},
-        {imgUrl:'http://t14.baidu.com/it/u=77466239,3866616347&fm=224&app=112&f=JPEG?w=429&h=499&s=BCB00A9BD4074AEE1C3F946B0300B031',name:'宝葫芦的秘密',collection:'童话故事',autor:'黎明',time:'20:60'},
-        {imgUrl:'http://t13.baidu.com/it/u=209943214,4118715336&fm=224&app=112&f=JPEG?w=500&h=500',name:'乐器',collection:'童话故事',autor:'江南',time:'20:14'},
-        {imgUrl:'http://t13.baidu.com/it/u=209943214,4118715336&fm=224&app=112&f=JPEG?w=500&h=500',name:'乐器',collection:'童话故事',autor:'江南',time:'20:14'},
-        {imgUrl:'http://t13.baidu.com/it/u=209943214,4118715336&fm=224&app=112&f=JPEG?w=500&h=500',name:'乐器',collection:'童话故事',autor:'江南',time:'20:14'},
-        {imgUrl:'http://t13.baidu.com/it/u=209943214,4118715336&fm=224&app=112&f=JPEG?w=500&h=500',name:'乐器',collection:'童话故事',autor:'江南',time:'20:14'},
-        {imgUrl:'http://t13.baidu.com/it/u=209943214,4118715336&fm=224&app=112&f=JPEG?w=500&h=500',name:'乐器',collection:'童话故事',autor:'江南',time:'20:14'},
-        {imgUrl:'http://t13.baidu.com/it/u=209943214,4118715336&fm=224&app=112&f=JPEG?w=500&h=500',name:'乐器',collection:'童话故事',autor:'江南',time:'20:14'},
-        {imgUrl:'http://t13.baidu.com/it/u=209943214,4118715336&fm=224&app=112&f=JPEG?w=500&h=500',name:'乐器',collection:'童话故事',autor:'江南',time:'20:14'},
-        ]
+      resultList:[],
+      inp:''
     }
   },
   methods:{
     toPlay(){
       this.$router.push('/player')
+    },
+    getList(){
+      const url = "http://localhost:8080/biyesheji/audio/list";
+      axios.get(url).then((res) => {
+        for (let i = 0; i < res.data.length; i++) {
+          if (i % 7 == 0) {
+            this.resultList.push(res.data[i]);
+          }
+        }
+        console.log(res.data);
+      });
+    },
+    search(){
+      axios.get('http://localhost:8080/biyesheji/audio/search/list/'+this.inp).then(res=>{
+        this.resultList = res.data
+      })
     }
+  },
+  watch:{
+    inp(n,o){
+      if (n=='') {
+        this.getList()
+      }
+    }
+  },
+  mounted(){
+    this.getList()
   }
 };
 </script>

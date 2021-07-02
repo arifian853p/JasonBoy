@@ -7,15 +7,16 @@
       <!-- <button @click="play">切换</button> -->
       <div class="CD">
         <div class="CD-bg" :class="type === 2 ? 'circle' : ''">
-          <img src="../../public/book.jpg" alt="" />
+          <img :src="imgUrl" alt="" />
         </div>
         <div class="CD-info">
           <ul>
             <li style="font-size: 40px; list-style-type: none; margin-left: 0">
-              蜗牛故事
+              {{ name }}
             </li>
-            <li>作者：有声的子衿</li>
-            <li>合集：神话故事</li>
+            <li>作者：{{ info }}</li>
+            <li>合集：{{ info }}</li>
+            <li>分类：{{ classify }}</li>
             <li>发布时间：2022-03-19</li>
             <li>评分：9.5</li>
           </ul>
@@ -23,7 +24,7 @@
       </div>
       <div class="big-controls">
         <div class="controls">
-          <img src="../../public/last.png" alt="" />
+          <img src="../../public/last.png" @click="last" alt="" />
           <img
             @click="toPlay"
             v-if="type == 1"
@@ -36,9 +37,11 @@
             src="../../public/pause2.png"
             alt=""
           />
-          <img src="../../public/next.png" alt="" />
+          <img src="../../public/next.png" @click="next" alt="" />
         </div>
-          <a href="" download="蜗牛故事.mp3"><img class="download" src="../../public/download.png" alt="" /></a>
+        <a href="" :download="name + '.mp3'"
+          ><img class="download" src="../../public/download.png" alt=""
+        /></a>
       </div>
       <div class="comments">
         <div class="comments-title">
@@ -59,16 +62,15 @@
         <hr />
         <div class="comments-title">
           <p>全部评论(1w+)</p>
-          <div class="comment" v-for="(i,n) in commentList" :key="n">
+          <div class="comment" v-for="(i, n) in commentList" :key="n">
             <img :src="i.avarUrl" alt="" />
             <div class="comment-info">
               <p>
-                <span>{{i.username}}：</span>{{i.content}}
+                <span>{{ i.username }}：</span>{{ i.content }}
               </p>
-              <p>{{i.time}}</p>
+              <p>{{ i.time }}</p>
             </div>
           </div>
-
         </div>
         <div></div>
       </div>
@@ -77,17 +79,44 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
       type: 1,
       user: "mybbidh",
-      commentList:[
-        {username:'兰兰小白鹄',avarUrl:'https://img2.baidu.com/it/u=1742064249,2154824212&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500',content:'我们都不是天赋异禀的人在茫茫人海中甚至会有些平庸 可是我们的人生不仅仅是潦草诗当在迷雾散尽时 天光大亮 我们一定会看清远方的灯塔奔走在漫漫时光中 成为故事的主角',time:'2020年2月20日 18:30'},
-        {username:'时刻是蛊',avarUrl:'https://img0.baidu.com/it/u=1942253063,3807598283&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500',content:'有朝一日请想我。 -- 安德烈艾席蒙 《Call me by your name》',time:'2020年2月27日 18:30'},
-        {username:'垂头的温柔',avarUrl:'https://img0.baidu.com/it/u=325674188,3280397254&fm=253&fmt=auto&app=138&f=JPEG?w=501&h=500',content:'为什么有些人性格很好却总是独来独往？因为性格好是教养，独来独往是性格。',time:'2020年2月30日 20:30'},
+      commentList: [
+        {
+          username: "兰兰小白鹄",
+          avarUrl:
+            "https://img2.baidu.com/it/u=1742064249,2154824212&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500",
+          content:
+            "我们都不是天赋异禀的人在茫茫人海中甚至会有些平庸 可是我们的人生不仅仅是潦草诗当在迷雾散尽时 天光大亮 我们一定会看清远方的灯塔奔走在漫漫时光中 成为故事的主角",
+          time: "2020年2月20日 18:30",
+        },
+        {
+          username: "时刻是蛊",
+          avarUrl:
+            "https://img0.baidu.com/it/u=1942253063,3807598283&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500",
+          content: "有朝一日请想我。 -- 安德烈艾席蒙 《Call me by your name》",
+          time: "2020年2月27日 18:30",
+        },
+        {
+          username: "垂头的温柔",
+          avarUrl:
+            "https://img0.baidu.com/it/u=325674188,3280397254&fm=253&fmt=auto&app=138&f=JPEG?w=501&h=500",
+          content:
+            "为什么有些人性格很好却总是独来独往？因为性格好是教养，独来独往是性格。",
+          time: "2020年2月30日 20:30",
+        },
       ],
-      myComment:''
+      myComment: "",
+      name: "",
+      imgUrl: "",
+      info: "",
+      id: 0,
+      classify: "",
+      lujing:''
     };
   },
   methods: {
@@ -103,30 +132,89 @@ export default {
     },
     change() {
       console.log("logout child");
-      this.$emit("logoutUser", this.user);
+      this.$emit("lujing", this.lujing);
     },
     download() {
       this.$parent.$refs.MusicPlay.download();
     },
     play() {},
-    publish(){
+    publish() {
       console.log(this.myComment);
-      const mine = {}
+      const mine = {};
       if (this.myComment) {
-        mine.username = '纳新'
-      mine.avarUrl = 'http://mms0.baidu.com/it/u=2152357245,920666573&fm=253&app=120&f=JPEG&fmt=auto&q=75&fmt=auto&q=75?w=500&h=500'
-      mine.content = this.myComment
-      var myDate = new Date();
-      mine.time = myDate.getFullYear()+'年'+(myDate.getMonth()+1)+'月'+myDate.getDate()+'日'+' '+myDate.getHours()+':'+myDate.getMinutes()
-      this.commentList.push(mine)
+        mine.username = "纳新";
+        mine.avarUrl =
+          "http://mms0.baidu.com/it/u=2152357245,920666573&fm=253&app=120&f=JPEG&fmt=auto&q=75&fmt=auto&q=75?w=500&h=500";
+        mine.content = this.myComment;
+        var myDate = new Date();
+        mine.time =
+          myDate.getFullYear() +
+          "年" +
+          (myDate.getMonth() + 1) +
+          "月" +
+          myDate.getDate() +
+          "日" +
+          " " +
+          myDate.getHours() +
+          ":" +
+          myDate.getMinutes();
+        this.commentList.push(mine);
       }
-      
-    }
+    },
+    last() {
+      this.type = 1;
+      this.id--;
+      let id = this.id;
+      const storage = JSON.parse(localStorage.getItem("storage"));
+
+      for (let i = 0; i < storage.length; i++) {
+        if (storage[i].id == id) {
+          this.imgUrl = storage[i].imgUrl;
+          this.name = storage[i].name;
+          this.info = storage[i].info;
+        }
+      }
+    },
+    next() {
+      this.type = 1;
+      this.id++;
+      let id = this.id;
+      const storage = JSON.parse(localStorage.getItem("storage"));
+      for (let i = 0; i < storage.length; i++) {
+        if (storage[i].id == id) {
+          this.imgUrl = storage[i].imgUrl;
+          this.name = storage[i].name;
+          this.info = storage[i].info;
+        }
+      }
+    },
+    getDetail() {
+      const id = this.id;
+      console.log(id);
+      axios
+        .get(`http://localhost:8080//biyesheji/audio/detail/${id}`)
+        .then((res) => {
+          console.log(res);
+          this.imgUrl =
+            "http://localhost:8080/biyesheji/audio/read/" + res.data.img;
+          this.name = res.data.name;
+          this.info = res.data.jieshao;
+          this.classify = res.data.type;
+          this.lujing = res.data.lujing
+          this.change()
+        });
+    },
   },
   mounted() {
+    const id = this.$route.query.id;
+    this.id = id;
     const nowType = localStorage.getItem("type");
-    console.log(nowType);
-    this.type = JSON.parse(nowType);
+    if (nowType) {
+      this.type = JSON.parse(nowType);
+    } else {
+      this.type = 1;
+    }
+    this.getDetail();
   },
 };
 </script>
