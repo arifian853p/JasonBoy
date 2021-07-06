@@ -17,7 +17,7 @@
             </div>
             <p class="author"><span>by：</span>江南</p>
             <p class="time"><span>时长：</span>20:12</p>
-            <img class="play" @click="toPlay" src="../../public/play.png" alt="" />
+            <img class="play" @click="toPlay(item.id)" src="../../public/play.png" alt="" />
           </div>
         </div>
         <div class="rank-list">
@@ -121,8 +121,8 @@ export default {
     }
   },
   methods:{
-    toPlay(){
-      this.$router.push('/player')
+    toPlay(e){
+      this.$router.push('/player?id='+e)
     },
     getList(){
       const url = "http://localhost:8080/biyesheji/audio/list";

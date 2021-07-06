@@ -9,7 +9,8 @@
       <div class="option" @click="yousheng1">有声小说</div>
       <div class="option" @click="lishi1">历史小说</div>
       <div class="option" @click="storge1">儿童故事</div>
-      <div class="option" @click="all">其他</div>
+      <div class="option" @click="other">其他</div>
+      <div class="option" @click="all">全部</div>
     </div>
     <div class="main">
       <div class="title">全部作品</div>
@@ -70,7 +71,7 @@ export default {
     lishi1(){
       this.classifyList('历史小说')
     },
-    all() {
+    other() {
       this.classifyList('其他')
     },
     storge1() {
@@ -79,9 +80,11 @@ export default {
     toPlay(e) {
       this.$router.push("/player?id=" + e);
     },
+    all(){
+      this.getList()
+    }
   },
   mounted() {
-    this.all();
     localStorage.setItem("storage", JSON.stringify(this.storge));
     this.getList();
   },

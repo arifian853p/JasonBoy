@@ -8,8 +8,8 @@
           <p>录制作品</p>
           <p>说出你的故事</p>
         </div>
-        <div class="part">
-          <img src="../../public/up.png" @click="toUpload" alt="" />
+        <div class="part" @click="toUpload">
+          <img src="../../public/up.png" alt="" />
           <p>上传作品</p>
           <p>让别人听见你的声音</p>
         </div>

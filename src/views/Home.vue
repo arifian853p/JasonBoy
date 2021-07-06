@@ -9,13 +9,9 @@
           <img class="icon" src="../../public/hot.png" alt="" />
           <p class="title1">热门推荐</p>
           <ul>
-            <li>音乐</li>
-            <li>音乐</li>
-            <li>音乐</li>
-            <li>音乐</li>
-            <li>音乐</li>
+            <li @click="toClassify" v-for="(i,n) in classify" :key="n">{{i}}</li>
           </ul>
-          <div class="more">
+          <div class="more" @click="toClassify">
             更多<img src="../../public/right.png" alt="" />
           </div>
         </div>
@@ -134,6 +130,7 @@ export default {
   data() {
     return {
       list: [],
+      classify:['评书','相声','小品','诗词','散文']
     };
   },
   methods: {
@@ -148,6 +145,9 @@ export default {
         console.log(res.data);
       });
     },
+    toClassify(){
+      this.$router.push('classify')
+    }
   },
   mounted() {
     this.getList();
@@ -201,11 +201,19 @@ export default {
   margin-right: 14px;
   font-size: 14px;
   margin-top: 8px;
+  cursor: pointer;
+}
+.recommend-title ul li:hover {
+  border-bottom: 1px solid #000;
 }
 .recommend-title .more {
   margin-left: 320px;
   display: flex;
   align-items: center;
+  cursor: pointer;
+}
+.recommend-title .more:hover {
+  border-bottom: 1px solid #000;
 }
 .recommend-title .more img {
   width: 14px;
